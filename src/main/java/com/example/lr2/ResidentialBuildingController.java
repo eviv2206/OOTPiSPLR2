@@ -29,14 +29,23 @@ public class ResidentialBuildingController {
 
     final int maxLength = 3;
 
+    private ResidentialBuilding residentialBuilding;
+
     @FXML
     void submit(ActionEvent event) {
         if (!inputAddress.getText().equals("") && !InputRooms.getText().equals("")
                 && !inputLevels.getText().equals("")){
-            MainController.buildings.add(new ResidentialBuilding(
+            ResidentialBuilding newResidentialBuilding = new ResidentialBuilding(
                     Integer.parseInt(inputLevels.getText()), inputAddress.getText(),
                     Integer.parseInt(InputRooms.getText())
-            ));
+            );
+            if (MainController.buildings.contains(this.residentialBuilding)){
+                MainController.buildings.set(MainController.buildings.indexOf(this.residentialBuilding), newResidentialBuilding);
+                MainController.street.set(MainController.street.indexOf(this.residentialBuilding), newResidentialBuilding);
+
+            } else {
+                MainController.buildings.add(newResidentialBuilding);
+            }
             Scene scene = btnSubmit.getScene();
             Stage currStage = (Stage) scene.getWindow();
             currStage.close();
@@ -73,6 +82,7 @@ public class ResidentialBuildingController {
     }
 
     public void setData(ResidentialBuilding residentialBuilding){
+        this.residentialBuilding = residentialBuilding;
         inputAddress.setText(residentialBuilding.getAddress());
         inputLevels.setText(String.valueOf(residentialBuilding.getNumOfLevels()));
         InputRooms.setText(String.valueOf(residentialBuilding.getNumOfLivingRooms()));

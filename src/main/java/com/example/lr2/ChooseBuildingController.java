@@ -19,7 +19,8 @@ public class ChooseBuildingController {
     @FXML
     void submit(ActionEvent event) {
         if (cmbBox.getSelectionModel().getSelectedItem() != null) {
-            MainController.street.add(cmbBox.getSelectionModel().getSelectedItem());
+            final Building building = MainController.buildings.get(MainController.buildings.indexOf(cmbBox.getSelectionModel().getSelectedItem()));
+            MainController.street.add(building);
         }
         Scene scene = btnSubmit.getScene();
         Stage currStage = (Stage) scene.getWindow();

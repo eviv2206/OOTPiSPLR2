@@ -12,6 +12,7 @@ import javafx.stage.Stage;
 import java.util.function.UnaryOperator;
 import java.util.regex.Pattern;
 
+
 public class ApartmentBuildingController {
 
     @FXML
@@ -31,13 +32,22 @@ public class ApartmentBuildingController {
 
     final int maxLength = 3;
 
+    private ApartmentBuilding apartmentBuilding;
+
     @FXML
     void submit(ActionEvent event) {
         if (!inputAddress.getText().equals("") && !inputLevels.getText().equals("")
                 && !inputNumApart.getText().equals("") && !inputRooms.getText().equals("")){
-            MainController.buildings.add(new ApartmentBuilding(
+            ApartmentBuilding newApartmentBuilding = new ApartmentBuilding(
                     Integer.parseInt(inputLevels.getText()), inputAddress.getText(),
-                    Integer.parseInt(inputRooms.getText()), Integer.parseInt(inputNumApart.getText())));
+                    Integer.parseInt(inputRooms.getText()), Integer.parseInt(inputNumApart.getText()));
+            if (MainController.buildings.contains(this.apartmentBuilding)){
+                MainController.buildings.set(MainController.buildings.indexOf(this.apartmentBuilding), newApartmentBuilding);
+                MainController.street.set(MainController.street.indexOf(this.apartmentBuilding), newApartmentBuilding);
+
+            } else {
+                MainController.buildings.add(newApartmentBuilding);
+            }
         }
         Scene scene = btnSubmit.getScene();
         Stage currStage = (Stage) scene.getWindow();
@@ -81,6 +91,7 @@ public class ApartmentBuildingController {
     }
 
     public void setData(ApartmentBuilding apartmentBuilding){
+        this.apartmentBuilding = apartmentBuilding;
         inputAddress.setText(apartmentBuilding.getAddress());
         inputRooms.setText(String.valueOf(apartmentBuilding.getNumOfLivingRooms()));
         inputLevels.setText(String.valueOf(apartmentBuilding.getNumOfLevels()));

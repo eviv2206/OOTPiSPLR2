@@ -31,13 +31,22 @@ public class StateBuildingController {
 
     final int maxLength = 3;
 
+    private StateBuilding stateBuilding;
+
     @FXML
     void submit(ActionEvent event) {
         if (!inputAddress.getText().equals("") && !inputLevels.getText().equals("")){
-            MainController.buildings.add(new StateBuilding(
+            StateBuilding newStateBuilding = new StateBuilding(
                     Integer.parseInt(inputLevels.getText()), inputAddress.getText(),
                     cmbType.getValue()
-            ));
+            );
+            if (MainController.buildings.contains(this.stateBuilding)){
+                MainController.buildings.set(MainController.buildings.indexOf(this.stateBuilding), newStateBuilding);
+                MainController.street.set(MainController.street.indexOf(this.stateBuilding), newStateBuilding);
+
+            } else {
+                MainController.buildings.add(newStateBuilding);
+            }
             Scene scene = btnSubmit.getScene();
             Stage currStage = (Stage) scene.getWindow();
             currStage.close();
@@ -73,6 +82,7 @@ public class StateBuildingController {
     }
 
     public void setData(StateBuilding stateBuilding){
+        this.stateBuilding = stateBuilding;
         inputAddress.setText(stateBuilding.getAddress());
         inputLevels.setText(String.valueOf(stateBuilding.getNumOfLevels()));
         cmbType.getSelectionModel().select(stateBuilding.getType());

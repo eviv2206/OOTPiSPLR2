@@ -32,14 +32,23 @@ public class IndividualHouseController {
 
     final int maxLength = 3;
 
+    private IndividualHouse individualHouse;
+
     @FXML
     void submit(ActionEvent event) {
         if (!inputAddress.getText().equals("") && !inputRooms.getText().equals("")
                 && !inputLevels.getText().equals("")) {
-            MainController.buildings.add(new IndividualHouse(
+            IndividualHouse newIndividualHouse = new IndividualHouse(
                     Integer.parseInt(inputLevels.getText()), inputAddress.getText(),
                     Integer.parseInt(inputRooms.getText()), InputOwners.getText()
-            ));
+            );
+            if (MainController.buildings.contains(this.individualHouse)){
+                MainController.buildings.set(MainController.buildings.indexOf(this.individualHouse), newIndividualHouse);
+                MainController.street.set(MainController.street.indexOf(this.individualHouse), newIndividualHouse);
+
+            } else {
+                MainController.buildings.add(newIndividualHouse);
+            }
             Scene scene = btnSubmit.getScene();
             Stage currStage = (Stage) scene.getWindow();
             currStage.close();
@@ -76,6 +85,7 @@ public class IndividualHouseController {
     }
 
     public void setData(IndividualHouse individualHouse){
+        this.individualHouse = individualHouse;
         inputAddress.setText(individualHouse.getAddress());
         inputRooms.setText(String.valueOf(individualHouse.getNumOfLivingRooms()));
         inputLevels.setText(String.valueOf(individualHouse.getNumOfLevels()));

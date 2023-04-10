@@ -55,7 +55,9 @@ public class MainController {
 
     @FXML
     void delete(ActionEvent event) {
-        buildings.remove(table.getSelectionModel().getSelectedItem());
+        Building building = table.getSelectionModel().getSelectedItem();
+        buildings.remove(building);
+        street.remove(building);
         table.refresh();
     }
 

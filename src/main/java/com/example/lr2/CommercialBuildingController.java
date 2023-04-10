@@ -31,14 +31,23 @@ public class CommercialBuildingController {
 
     final int maxLength = 3;
 
+    private CommercialBuilding commercialBuilding;
+
     @FXML
     void submit(ActionEvent event) {
         if (!inputTentants.getText().equals("") && !inputAddress.getText().equals("")
                 && !inputRooms.getText().equals("") && !inputLevels.getText().equals("")){
-            MainController.buildings.add(new CommercialBuilding(
+            CommercialBuilding newCommercialBuilding = new CommercialBuilding(
                     Integer.parseInt(inputLevels.getText()), inputAddress.getText(),
                     Integer.parseInt(inputTentants.getText()), Integer.parseInt(inputRooms.getText())
-            ));
+            );
+            if (MainController.buildings.contains(this.commercialBuilding)){
+                MainController.buildings.set(MainController.buildings.indexOf(this.commercialBuilding), newCommercialBuilding);
+                MainController.street.set(MainController.street.indexOf(this.commercialBuilding), newCommercialBuilding);
+
+            } else {
+                MainController.buildings.add(newCommercialBuilding);
+            }
             Scene scene = btnSubmit.getScene();
             Stage currStage = (Stage) scene.getWindow();
             currStage.close();
@@ -82,6 +91,7 @@ public class CommercialBuildingController {
     }
 
     public void setData(CommercialBuilding commercialBuilding){
+        this.commercialBuilding = commercialBuilding;
         inputAddress.setText(commercialBuilding.getAddress());
         inputLevels.setText(String.valueOf(commercialBuilding.getNumOfLevels()));
         inputRooms.setText(String.valueOf(commercialBuilding.getNumOfAvailableRooms()));

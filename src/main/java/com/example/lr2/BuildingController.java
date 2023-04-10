@@ -22,10 +22,19 @@ public class BuildingController {
     @FXML
     private TextField inputLevels;
 
+    private Building building;
+
     @FXML
     void submit(ActionEvent event) {
-        if (!inputAddress.getText().equals("") && !inputLevels.getText().equals("")){
-            MainController.buildings.add(new Building(Integer.parseInt(inputLevels.getText()), inputAddress.getText()));
+        if (!inputAddress.getText().equals("") && !inputLevels.getText().equals("")) {
+            final Building newBuilding = new Building(Integer.parseInt(inputLevels.getText()), inputAddress.getText());
+            if (MainController.buildings.contains(this.building)) {
+                MainController.buildings.set(MainController.buildings.indexOf(this.building), newBuilding);
+                MainController.street.set(MainController.street.indexOf(this.building), newBuilding);
+
+            } else {
+                MainController.buildings.add(newBuilding);
+            }
             Scene scene = btnSubmit.getScene();
             Stage currStage = (Stage) scene.getWindow();
             currStage.close();
@@ -55,7 +64,8 @@ public class BuildingController {
         });
     }
 
-    public void setData(Building building){
+    public void setData(Building building) {
+        this.building = building;
         inputAddress.setText(building.getAddress());
         inputLevels.setText(String.valueOf(building.getNumOfLevels()));
     }
