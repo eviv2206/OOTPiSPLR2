@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<VBox prefHeight="188.0" prefWidth="384.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.lr2.CommercialBuildingController">
+   <children>
+      <AnchorPane maxHeight="-1.0" maxWidth="-1.0" prefHeight="202.0" prefWidth="576.0" VBox.vgrow="ALWAYS">
+         <children>
+            <Text layoutX="41.0" layoutY="55.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Address:" />
+            <TextField fx:id="inputAddress" layoutX="41.0" layoutY="59.0" prefHeight="26.0" prefWidth="314.0" />
+            <Text layoutX="40.0" layoutY="98.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Levels:" />
+            <TextField fx:id="inputLevels" layoutX="40.0" layoutY="105.0" prefHeight="26.0" prefWidth="35.0" />
+            <Text layoutX="93.0" layoutY="34.0" strokeType="OUTSIDE" strokeWidth="0.0" text="COMMERCIAL BUILDING">
+               <font>
+                  <Font name="System Bold" size="18.0" />
+               </font>
+            </Text>
+            <Button fx:id="btnSubmit" layoutX="165.0" layoutY="141.0" mnemonicParsing="false" onAction="#submit" text="Submit" />
+            <Text layoutX="151.0" layoutY="99.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Avalable rooms:" />
+            <TextField fx:id="inputRooms" layoutX="149.0" layoutY="105.0" prefHeight="26.0" prefWidth="82.0" />
+            <Text layoutX="273.0" layoutY="99.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Number of tentants:" />
+            <TextField fx:id="inputTentants" layoutX="273.0" layoutY="105.0" prefHeight="26.0" prefWidth="107.0" />
+         </children>
+      </AnchorPane>
+   </children>
+</VBox>
