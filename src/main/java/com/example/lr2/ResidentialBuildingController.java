@@ -1,6 +1,6 @@
 package com.example.lr2;
 
-import com.example.lr2.classes.CommercialBuilding;
+
 import com.example.lr2.classes.ResidentialBuilding;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -11,7 +11,6 @@ import javafx.scene.control.TextFormatter;
 import javafx.stage.Stage;
 
 import java.util.function.UnaryOperator;
-import java.util.regex.Pattern;
 
 public class ResidentialBuildingController {
 
@@ -34,14 +33,16 @@ public class ResidentialBuildingController {
     @FXML
     void submit(ActionEvent event) {
         if (!inputAddress.getText().equals("") && !InputRooms.getText().equals("")
-                && !inputLevels.getText().equals("")){
+                && !inputLevels.getText().equals("")) {
             ResidentialBuilding newResidentialBuilding = new ResidentialBuilding(
                     Integer.parseInt(inputLevels.getText()), inputAddress.getText(),
                     Integer.parseInt(InputRooms.getText())
             );
-            if (MainController.buildings.contains(this.residentialBuilding)){
+            if (MainController.buildings.contains(this.residentialBuilding)) {
                 MainController.buildings.set(MainController.buildings.indexOf(this.residentialBuilding), newResidentialBuilding);
-                MainController.street.set(MainController.street.indexOf(this.residentialBuilding), newResidentialBuilding);
+                if (MainController.street.contains(this.residentialBuilding)) {
+                    MainController.street.set(MainController.street.indexOf(this.residentialBuilding), newResidentialBuilding);
+                }
 
             } else {
                 MainController.buildings.add(newResidentialBuilding);
@@ -54,15 +55,7 @@ public class ResidentialBuildingController {
 
     @FXML
     void initialize() {
-        Pattern pattern = Pattern.compile("[0-9]*");
-        UnaryOperator<TextFormatter.Change> filter = change -> {
-            String text = change.getControlNewText();
-            if (pattern.matcher(text).matches()) {
-                return change;
-            } else {
-                return null;
-            }
-        };
+        UnaryOperator<TextFormatter.Change> filter = Validation.getFilter();
         TextFormatter<String> textFormatterLevels = new TextFormatter<>(filter);
         TextFormatter<String> textFormatterRooms = new TextFormatter<>(filter);
 
@@ -81,7 +74,7 @@ public class ResidentialBuildingController {
 
     }
 
-    public void setData(ResidentialBuilding residentialBuilding){
+    public void setData(ResidentialBuilding residentialBuilding) {
         this.residentialBuilding = residentialBuilding;
         inputAddress.setText(residentialBuilding.getAddress());
         inputLevels.setText(String.valueOf(residentialBuilding.getNumOfLevels()));

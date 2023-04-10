@@ -1,16 +1,17 @@
-package com.example.lr2;
+package com.example.lr2.abstractFactory;
 
+import com.example.lr2.FormController;
+import com.example.lr2.StateBuildingController;
 import com.example.lr2.classes.Building;
-import com.example.lr2.classes.IndividualHouse;
+import com.example.lr2.classes.StateBuilding;
 import javafx.fxml.FXMLLoader;
 import javafx.stage.Stage;
 
-public class ResidentialBuildingFactory implements BuildingAbstractFactory{
-
+public class StateBuildingFactory implements BuildingAbstractFactory{
 
     @Override
     public void add(String title, String formPath) {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource(formPath));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource(resourcePath + formPath));
         Stage stage = new Stage();
         FormController.setFormParameters(title, loader, stage);
         stage.show();
@@ -18,11 +19,11 @@ public class ResidentialBuildingFactory implements BuildingAbstractFactory{
 
     @Override
     public void edit(Building building, String title, String formPath) {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource(formPath));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource(resourcePath + formPath));
         Stage stage = new Stage();
         Object controller = FormController.setFormParameters(title, loader, stage);
         assert controller != null;
-        ((IndividualHouseController) controller).setData((IndividualHouse) building);
+        ((StateBuildingController) controller).setData((StateBuilding) building);
         stage.showAndWait();
     }
 }

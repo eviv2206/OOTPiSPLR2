@@ -1,6 +1,5 @@
 package com.example.lr2;
 
-import com.example.lr2.classes.CommercialBuilding;
 import com.example.lr2.classes.StateBuilding;
 import com.example.lr2.classes.TypeStateBuilding;
 import javafx.event.ActionEvent;
@@ -13,7 +12,6 @@ import javafx.scene.control.TextFormatter;
 import javafx.stage.Stage;
 
 import java.util.function.UnaryOperator;
-import java.util.regex.Pattern;
 
 public class StateBuildingController {
 
@@ -35,14 +33,16 @@ public class StateBuildingController {
 
     @FXML
     void submit(ActionEvent event) {
-        if (!inputAddress.getText().equals("") && !inputLevels.getText().equals("")){
+        if (!inputAddress.getText().equals("") && !inputLevels.getText().equals("")) {
             StateBuilding newStateBuilding = new StateBuilding(
                     Integer.parseInt(inputLevels.getText()), inputAddress.getText(),
                     cmbType.getValue()
             );
-            if (MainController.buildings.contains(this.stateBuilding)){
+            if (MainController.buildings.contains(this.stateBuilding)) {
                 MainController.buildings.set(MainController.buildings.indexOf(this.stateBuilding), newStateBuilding);
-                MainController.street.set(MainController.street.indexOf(this.stateBuilding), newStateBuilding);
+                if (MainController.street.contains(this.stateBuilding)) {
+                    MainController.street.set(MainController.street.indexOf(this.stateBuilding), newStateBuilding);
+                }
 
             } else {
                 MainController.buildings.add(newStateBuilding);
@@ -62,15 +62,8 @@ public class StateBuildingController {
                 TypeStateBuilding.university
         );
         cmbType.getSelectionModel().selectFirst();
-        Pattern pattern = Pattern.compile("[0-9]*");
-        UnaryOperator<TextFormatter.Change> filter = change -> {
-            String text = change.getControlNewText();
-            if (pattern.matcher(text).matches()) {
-                return change;
-            } else {
-                return null;
-            }
-        };
+
+        UnaryOperator<TextFormatter.Change> filter = Validation.getFilter();
         TextFormatter<String> textFormatterLevels = new TextFormatter<>(filter);
 
         inputLevels.setTextFormatter(textFormatterLevels);
@@ -81,7 +74,7 @@ public class StateBuildingController {
         });
     }
 
-    public void setData(StateBuilding stateBuilding){
+    public void setData(StateBuilding stateBuilding) {
         this.stateBuilding = stateBuilding;
         inputAddress.setText(stateBuilding.getAddress());
         inputLevels.setText(String.valueOf(stateBuilding.getNumOfLevels()));

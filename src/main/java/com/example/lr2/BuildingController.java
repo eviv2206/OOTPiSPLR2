@@ -10,7 +10,6 @@ import javafx.scene.control.TextFormatter;
 import javafx.stage.Stage;
 
 import java.util.function.UnaryOperator;
-import java.util.regex.Pattern;
 
 public class BuildingController {
     @FXML
@@ -30,7 +29,9 @@ public class BuildingController {
             final Building newBuilding = new Building(Integer.parseInt(inputLevels.getText()), inputAddress.getText());
             if (MainController.buildings.contains(this.building)) {
                 MainController.buildings.set(MainController.buildings.indexOf(this.building), newBuilding);
-                MainController.street.set(MainController.street.indexOf(this.building), newBuilding);
+                if (MainController.street.contains(this.building)) {
+                    MainController.street.set(MainController.street.indexOf(this.building), newBuilding);
+                }
 
             } else {
                 MainController.buildings.add(newBuilding);
@@ -45,15 +46,7 @@ public class BuildingController {
 
     @FXML
     void initialize() {
-        Pattern pattern = Pattern.compile("[0-9]*");
-        UnaryOperator<TextFormatter.Change> filter = change -> {
-            String text = change.getControlNewText();
-            if (pattern.matcher(text).matches()) {
-                return change;
-            } else {
-                return null;
-            }
-        };
+        UnaryOperator<TextFormatter.Change> filter = Validation.getFilter();
         TextFormatter<String> textFormatterLevels = new TextFormatter<>(filter);
 
         inputLevels.setTextFormatter(textFormatterLevels);

@@ -1,6 +1,5 @@
 package com.example.lr2;
 
-import com.example.lr2.classes.CommercialBuilding;
 import com.example.lr2.classes.IndividualHouse;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -11,7 +10,6 @@ import javafx.scene.control.TextFormatter;
 import javafx.stage.Stage;
 
 import java.util.function.UnaryOperator;
-import java.util.regex.Pattern;
 
 public class IndividualHouseController {
 
@@ -44,8 +42,9 @@ public class IndividualHouseController {
             );
             if (MainController.buildings.contains(this.individualHouse)){
                 MainController.buildings.set(MainController.buildings.indexOf(this.individualHouse), newIndividualHouse);
-                MainController.street.set(MainController.street.indexOf(this.individualHouse), newIndividualHouse);
-
+                if (MainController.street.contains(this.individualHouse)) {
+                    MainController.street.set(MainController.street.indexOf(this.individualHouse), newIndividualHouse);
+                }
             } else {
                 MainController.buildings.add(newIndividualHouse);
             }
@@ -57,15 +56,7 @@ public class IndividualHouseController {
 
     @FXML
     void initialize() {
-        Pattern pattern = Pattern.compile("[0-9]*");
-        UnaryOperator<TextFormatter.Change> filter = change -> {
-            String text = change.getControlNewText();
-            if (pattern.matcher(text).matches()) {
-                return change;
-            } else {
-                return null;
-            }
-        };
+        UnaryOperator<TextFormatter.Change> filter = Validation.getFilter();
         TextFormatter<String> textFormatterLevels = new TextFormatter<>(filter);
         TextFormatter<String> textFormatterRooms = new TextFormatter<>(filter);
 

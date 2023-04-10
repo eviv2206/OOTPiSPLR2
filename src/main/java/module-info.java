@@ -8,6 +8,8 @@ module com.example.lr2 {
 
     opens com.example.lr2.classes to javafx.base;
     exports com.example.lr2.classes;
+    exports com.example.lr2.abstractFactory;
+    opens com.example.lr2.abstractFactory to javafx.fxml;
 
 
 }

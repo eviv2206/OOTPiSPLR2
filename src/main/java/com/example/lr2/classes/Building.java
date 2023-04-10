@@ -27,7 +27,7 @@ public class Building {
 
     @Override
     public String toString(){
-        return this.address + this.numOfLevels;
+        return this.address;
     }
 
 

@@ -1,32 +1,28 @@
 package com.example.lr2;
 
+import com.example.lr2.abstractFactory.*;
 import com.example.lr2.classes.*;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.stage.Stage;
-
-import java.util.HashMap;
-import java.util.Map;
 
 public class SelectTypeController {
     @FXML
     private Button btnSubmit;
 
     @FXML
-    private ComboBox<String> cmbBox;
-
-    final Map<String, String> formsMap = new HashMap<>();
+    private ComboBox<BuildingClass> cmbBox;
 
     @FXML
     void submit(ActionEvent event) {
-        String className = cmbBox.getSelectionModel().getSelectedItem();
-        GetFactory getFactory = new GetFactory();
-        BuildingAbstractFactory abstractFactory = getFactory.getFactory(className);
-        abstractFactory.add(className, formsMap.get(className));
+        BuildingClass buildingClass = cmbBox.getSelectionModel().getSelectedItem();
+        BuildingAbstractFactory abstractFactory = buildingClass.getFactory();
+        abstractFactory.add(buildingClass.getTitle(), buildingClass.getFxmlName());
         Scene scene = cmbBox.getScene();
         Stage currStage = (Stage) scene.getWindow();
         currStage.close();
@@ -34,21 +30,15 @@ public class SelectTypeController {
 
     @FXML
     void initialize() {
-        cmbBox.getItems().addAll(
-                Building.class.getSimpleName(),
-                ApartmentBuilding.class.getSimpleName(),
-                CommercialBuilding.class.getSimpleName(),
-                IndividualHouse.class.getSimpleName(),
-                ResidentialBuilding.class.getSimpleName(),
-                StateBuilding.class.getSimpleName()
+        ObservableList<BuildingClass> classes = FXCollections.observableArrayList(
+                new BuildingClass(Building.class, "Building", "Create building", "BuildingForm.fxml" , new BuildingFactory()),
+                new BuildingClass(ApartmentBuilding.class, "Apartment building", "Create apartment building", "ApartmentBuildingForm.fxml", new ApartmentBuildingFactory()),
+                new BuildingClass(CommercialBuilding.class, "Commercial building", "Create commercial building", "CommercialBuildingForm.fxml", new CommercialBuildingFactory()),
+                new BuildingClass(IndividualHouse.class, "Individual house", "Create individual house", "IndividualHouseForm.fxml", new IndividualHouseFactory()),
+                new BuildingClass(ResidentialBuilding.class, "Residential building", "Create residential building", "ResidentialBuildingForm.fxml", new ResidentialBuildingFactory()),
+                new BuildingClass(StateBuilding.class, "State building", "Create state building", "StateBuildingForm.fxml", new StateBuildingFactory())
         );
+        cmbBox.setItems(classes);
         cmbBox.getSelectionModel().selectFirst();
-
-        formsMap.put(Building.class.getSimpleName(), "BuildingForm.fxml");
-        formsMap.put(ApartmentBuilding.class.getSimpleName(), "ApartmentBuildingForm.fxml");
-        formsMap.put(CommercialBuilding.class.getSimpleName(), "CommercialBuildingForm.fxml");
-        formsMap.put(IndividualHouse.class.getSimpleName(), "IndividualHouseForm.fxml");
-        formsMap.put(ResidentialBuilding.class.getSimpleName(), "ResidentialBuildingForm.fxml");
-        formsMap.put(StateBuilding.class.getSimpleName(), "StateBuildingForm.fxml");
     }
 }

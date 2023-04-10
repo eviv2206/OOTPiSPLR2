@@ -1,12 +1,16 @@
 package com.example.lr2;
 
 import com.example.lr2.classes.*;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.stage.Stage;
+
+import java.util.ArrayList;
 
 public class ChooseBuildingController {
 
@@ -29,7 +33,9 @@ public class ChooseBuildingController {
 
     @FXML
     void initialize() {
-        cmbBox.setItems(MainController.buildings);
+        ObservableList<Building> list = FXCollections.observableArrayList(new ArrayList<>(MainController.buildings));
+        list.removeIf(MainController.street::contains);
+        cmbBox.setItems(list);
         cmbBox.getSelectionModel().selectFirst();
     }
 
