@@ -26,4 +26,9 @@ public class StateBuildingFactory implements BuildingAbstractFactory{
         ((StateBuildingController) controller).setData((StateBuilding) building);
         stage.showAndWait();
     }
+
+    @Override
+    public Building create() {
+        return new StateBuilding();
+    }
 }

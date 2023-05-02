@@ -1,8 +1,16 @@
 package com.example.lr2.classes;
 
-public class Building {
+import java.io.Serializable;
+import java.util.Objects;
+
+public class Building implements Serializable {
     private int numOfLevels;
     private String address;
+
+    public Building(){
+        this.numOfLevels = 0;
+        this.address = "";
+    }
 
     public Building(int numOfLevels, String address){
         this.numOfLevels = numOfLevels;
@@ -26,8 +34,14 @@ public class Building {
     }
 
     @Override
-    public String toString(){
-        return this.address;
+    public boolean equals(Object obj) {
+        if (obj == this) {
+            return true;
+        }
+        if (!(obj instanceof Building other)) {
+            return false;
+        }
+        return Objects.equals(address, other.address);
     }
 
 

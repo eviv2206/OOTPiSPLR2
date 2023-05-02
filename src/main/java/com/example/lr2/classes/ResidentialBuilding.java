@@ -1,7 +1,13 @@
 package com.example.lr2.classes;
 
-public class ResidentialBuilding extends Building {
+import java.io.Serializable;
+
+public class ResidentialBuilding extends Building implements Serializable {
     int numOfLivingRooms;
+
+    public ResidentialBuilding(){
+        super();
+    }
 
     public ResidentialBuilding(int numOfLevels, String address, int numOfLivingRooms){
         super(numOfLevels, address);

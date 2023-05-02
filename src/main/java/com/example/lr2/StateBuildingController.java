@@ -78,7 +78,7 @@ public class StateBuildingController {
         this.stateBuilding = stateBuilding;
         inputAddress.setText(stateBuilding.getAddress());
         inputLevels.setText(String.valueOf(stateBuilding.getNumOfLevels()));
-        cmbType.getSelectionModel().select(stateBuilding.getType());
+        cmbType.getSelectionModel().select(stateBuilding.getTypeBuilding());
     }
 
 }

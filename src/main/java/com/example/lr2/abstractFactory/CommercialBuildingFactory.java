@@ -26,4 +26,9 @@ public class CommercialBuildingFactory implements BuildingAbstractFactory {
         ((CommercialBuildingController) controller).setData((CommercialBuilding) building);
         stage.show();
     }
+
+    @Override
+    public Building create() {
+        return new CommercialBuilding();
+    }
 }

@@ -1,6 +1,8 @@
 package com.example.lr2.classes;
 
-public class Street {
+import java.io.Serializable;
+
+public class Street implements Serializable {
     CommercialBuilding[] commercialBuildings;
     IndividualHouse[] individualHouses;
     ApartmentBuilding[] apartmentBuildings;

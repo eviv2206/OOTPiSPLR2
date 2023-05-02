@@ -1,13 +1,21 @@
 package com.example.lr2.classes;
 
-public class StateBuilding extends Building{
-    TypeStateBuilding type;
-    public StateBuilding(int numOfLevels, String address, TypeStateBuilding type) {
-        super(numOfLevels, address);
-        this.type = type;
+import java.io.Serializable;
+
+public class StateBuilding extends Building implements Serializable {
+    private final TypeStateBuilding typeBuilding;
+
+    public StateBuilding(){
+        super();
+        this.typeBuilding = null;
     }
 
-    public TypeStateBuilding getType() {
-        return type;
+    public StateBuilding(int numOfLevels, String address, TypeStateBuilding type) {
+        super(numOfLevels, address);
+        this.typeBuilding = type;
+    }
+
+    public TypeStateBuilding getTypeBuilding() {
+        return typeBuilding;
     }
 }

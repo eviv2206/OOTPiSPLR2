@@ -10,4 +10,6 @@ public interface BuildingAbstractFactory {
 
     void edit(Building building, String title, String formPath);
 
+    Building create();
+
 }

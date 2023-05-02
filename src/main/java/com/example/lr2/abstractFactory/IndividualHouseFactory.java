@@ -26,4 +26,9 @@ public class IndividualHouseFactory implements BuildingAbstractFactory{
         ((IndividualHouseController) controller).setData((IndividualHouse) building);
         stage.showAndWait();
     }
+
+    @Override
+    public Building create() {
+        return new IndividualHouse();
+    }
 }
