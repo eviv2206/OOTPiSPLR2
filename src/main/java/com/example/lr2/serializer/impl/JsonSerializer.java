@@ -6,6 +6,7 @@ import com.example.lr2.serializer.Serializer;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.lang.reflect.Type;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -21,7 +22,7 @@ public class JsonSerializer implements Serializer {
             .registerSubtype(IndividualHouse.class, "individual house").registerSubtype(ResidentialBuilding.class, "residential building")
             .registerSubtype(StateBuilding.class, "state building");
     @Override
-    public String getExtension() {
+    public String getFilterExtension() {
         return "*.json";
     }
 
@@ -31,11 +32,11 @@ public class JsonSerializer implements Serializer {
     }
 
     @Override
-    public void serialize(ArrayList<Building> items, String filePath){
+    public void serialize(ArrayList<Building> items, OutputStream os){
         Gson gson = new Gson().newBuilder().registerTypeAdapterFactory(typeAdapterFactory).create();
         Type type = new TypeToken<ArrayList<Building>>(){}.getType();
-        try(FileWriter fw = new FileWriter(filePath)){
-            fw.write(gson.toJson(items, type));
+        try{
+            os.write(gson.toJson(items, type).getBytes());
         } catch (IOException e){
             System.err.println(e.getMessage());
         }

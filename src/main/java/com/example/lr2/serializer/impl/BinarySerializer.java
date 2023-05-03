@@ -8,7 +8,7 @@ import java.util.ArrayList;
 
 public class BinarySerializer implements Serializer {
     @Override
-    public String getExtension() {
+    public String getFilterExtension() {
         return "*.bin";
     }
 
@@ -18,8 +18,8 @@ public class BinarySerializer implements Serializer {
     }
 
     @Override
-    public void serialize(ArrayList<Building> buildings, String directoryPath) {
-        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(directoryPath))){
+    public void serialize(ArrayList<Building> buildings, OutputStream os) {
+        try(ObjectOutputStream oos = new ObjectOutputStream(os)){
             oos.writeObject(buildings);
         } catch (IOException e) {
             System.err.println(e);

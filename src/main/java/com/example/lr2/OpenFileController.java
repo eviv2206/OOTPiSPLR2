@@ -16,6 +16,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
 
 public class OpenFileController {
 
@@ -57,20 +58,19 @@ public class OpenFileController {
         UtilFileChooser ufc = new UtilFileChooser(MainController.serializerMap, MainController.pluginMap);
         File file = ufc.getOpenFile();
         if (file != null) {
-            String extension = UtilFileChooser.getExtension(file.getAbsolutePath());
-            if (isEncoded(extension)) {
+            ArrayList<String> listExtensions = UtilFileChooser.getExtensions(file.getAbsolutePath());
+            if (listExtensions.size() > 1 && isEncoded(listExtensions.get(1))) {
                 try {
                     byte[] fileBytes = Files.readAllBytes(Path.of(file.getPath()));
-                    fileBytes = MainController.pluginMap.get(extension).decode(fileBytes);
+                    fileBytes = MainController.pluginMap.get(listExtensions.get(1)).decode(fileBytes);
                     String filePath = file.getPath();
-                    int index = filePath.lastIndexOf(extension) - 1;
-                    String newExtension = UtilFileChooser.getExtension(filePath.substring(0, index) + filePath.substring(index + extension.length() + 1));
-                    return FXCollections.observableArrayList(MainController.serializerMap.get(newExtension).deserialize(fileBytes));
+                    int index = filePath.lastIndexOf(listExtensions.get(1)) - 1;
+                    return FXCollections.observableArrayList(MainController.serializerMap.get(listExtensions.get(0)).deserialize(fileBytes));
                 } catch (IOException e) {
                     System.err.println(e.getMessage());
                 }
             } else {
-                return FXCollections.observableArrayList(MainController.serializerMap.get(extension).deserialize(file.getPath()));
+                return FXCollections.observableArrayList(MainController.serializerMap.get(listExtensions.get(0)).deserialize(file.getPath()));
             }
         }
         return null;

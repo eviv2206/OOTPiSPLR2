@@ -6,6 +6,7 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class UtilFileChooser {
@@ -19,13 +20,18 @@ public class UtilFileChooser {
         this.serializerMap = serializerMap;
     }
 
-    public static String getExtension(String absolutePath){
-        return absolutePath.substring(absolutePath.lastIndexOf(".") + 1);
+    public static ArrayList<String> getExtensions(String absolutePath){
+        ArrayList<String> list = new ArrayList<>();
+        if (absolutePath.indexOf('.') != absolutePath.lastIndexOf('.')){
+            list.add(absolutePath.substring(absolutePath.indexOf('.') + 1, absolutePath.lastIndexOf('.')));
+        }
+        list.add(absolutePath.substring(absolutePath.lastIndexOf(".") + 1));
+        return list;
     }
 
-    public File getSavingFile(){
+    public File getSavingFile(String encodingExt){
         FileChooser fc = new FileChooser();
-        getExtensionFiltersToSave(fc);
+        getExtensionFiltersToSave(fc, encodingExt);
         return fc.showSaveDialog(new Stage());
     }
 
@@ -35,10 +41,10 @@ public class UtilFileChooser {
         return fc.showOpenDialog(new Stage());
     }
 
-    private void getExtensionFiltersToSave(FileChooser fc){
+    private void getExtensionFiltersToSave(FileChooser fc, String ext){
         for (String key : serializerMap.keySet()){
             Serializer s = serializerMap.get(key);
-            fc.getExtensionFilters().add(new FileChooser.ExtensionFilter(s.getDescription(), s.getExtension()));
+            fc.getExtensionFilters().add(new FileChooser.ExtensionFilter(s.getDescription() + " encoded", s.getFilterExtension()+ext));
         }
     }
 
@@ -49,7 +55,7 @@ public class UtilFileChooser {
         }
         for (String key : serializerMap.keySet()){
             Serializer s = serializerMap.get(key);
-            fc.getExtensionFilters().add(new FileChooser.ExtensionFilter(s.getDescription(), s.getExtension()));
+            fc.getExtensionFilters().add(new FileChooser.ExtensionFilter(s.getDescription(), s.getFilterExtension()));
         }
     }
 }

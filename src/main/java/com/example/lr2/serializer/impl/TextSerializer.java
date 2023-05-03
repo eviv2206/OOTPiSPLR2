@@ -17,9 +17,11 @@ public class TextSerializer implements Serializer {
     private final HashMap<String, BuildingAbstractFactory> buildingClassesMap = new HashMap<>();
 
     @Override
-    public String getExtension() {
+    public String getFilterExtension() {
         return "*.txt";
     }
+
+    public String getExtension(){ return ".txt";}
 
     @Override
     public String getDescription() {
@@ -27,15 +29,15 @@ public class TextSerializer implements Serializer {
     }
 
     @Override
-    public void serialize(ArrayList<Building> items, String filePath) {
-        try (BufferedWriter bw = new BufferedWriter(new FileWriter(filePath))) {
+    public void serialize(ArrayList<Building> items, OutputStream os) {
+        try{
             for (Building item : items) {
                 ArrayList<Field> fs = getAllFields(item.getClass());
-                bw.write(item.getClass().getSimpleName() + "\n");
+                os.write((item.getClass().getSimpleName() + "\n").getBytes());
                 for (Field field : fs) {
                     field.setAccessible(true);
-                    bw.write(field.getName()+ "\n");
-                    bw.write(field.get(item) + "\n");
+                    os.write((field.getName()+ "\n").getBytes());
+                    os.write((field.get(item) + "\n").getBytes());
                 }
             }
         } catch (IllegalAccessException | IOException e) {

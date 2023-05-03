@@ -13,8 +13,7 @@ import javafx.scene.control.RadioButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.stage.Stage;
 
-import java.io.File;
-import java.io.FileOutputStream;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -44,17 +43,26 @@ public class ChooseEncodingController {
     @FXML
     void execute(ActionEvent event) {
         ObservableList<Building> listToSave;
-        if (rbtnBuilding.isSelected()){
+        if (rbtnBuilding.isSelected()) {
             listToSave = MainController.buildings;
         } else {
             listToSave = MainController.street;
         }
-        if (!cmbEncoding.getValue().equals("None")){
-            serialize(listToSave);
-            encode();
+        OutputStream outputStream = new ByteArrayOutputStream();
+        UtilFileChooser ufc = new UtilFileChooser(MainController.serializerMap, MainController.pluginMap);
+        if (!cmbEncoding.getValue().equals("None")) {
+            String encodeExt = MainController.pluginMap.get(cmbEncoding.getValue()).getExtension().substring(1);
+            currFile = ufc.getSavingFile(encodeExt);
+            serialize(listToSave, outputStream);
+            encode(outputStream);
         } else {
-            serialize(listToSave);
+            currFile = ufc.getSavingFile("");
+            serialize(listToSave, outputStream);
         }
+        if (currFile != null) {
+            saveOutputStreamToFile(outputStream, currFile.getAbsolutePath());
+        }
+
         currFile = null;
         Scene scene = btnSubmit.getScene();
         Stage currStage = (Stage) scene.getWindow();
@@ -69,29 +77,28 @@ public class ChooseEncodingController {
         cmbEncoding.getSelectionModel().selectFirst();
     }
 
-    private void serialize(ObservableList<Building> listToSave){
-        UtilFileChooser ufc = new UtilFileChooser(MainController.serializerMap, MainController.pluginMap);
-        currFile = ufc.getSavingFile();
-        if (currFile != null){
-            String ext = UtilFileChooser.getExtension(currFile.getAbsolutePath());
-            MainController.serializerMap.get(ext).serialize(new ArrayList<>(listToSave), currFile.getPath());
-        }
+    private void serialize(ObservableList<Building> listToSave, OutputStream os) {
+        ArrayList<String> listExtensions = UtilFileChooser.getExtensions(currFile.getAbsolutePath());
+        MainController.serializerMap.get(listExtensions.get(0)).serialize(new ArrayList<>(listToSave), os);
     }
 
-    private void encode(){
+    private void encode(OutputStream os) {
         try {
-            byte[] fileBytes = Files.readAllBytes(Path.of(currFile.getPath()));
-            String newPath = currFile.getPath() + "." + MainController.pluginMap.get(cmbEncoding.getValue()).toString();
-            currFile.renameTo(new File(newPath));
-            fileBytes = MainController.pluginMap.get(cmbEncoding.getValue()).encode(fileBytes);
-            FileOutputStream fw = new FileOutputStream(newPath);
-            fw.write(fileBytes);
-            fw.close();
+            byte[] fileBytes = MainController.pluginMap.get(cmbEncoding.getValue()).encode(((ByteArrayOutputStream) os).toByteArray());
+            ((ByteArrayOutputStream) os).reset();
+            os.write(fileBytes);
         } catch (Exception e) {
             System.err.println(e.getMessage());
         }
     }
 
-
+    private static void saveOutputStreamToFile(OutputStream outputStream, String filePath) {
+        byte[] outputBytes = ((ByteArrayOutputStream) outputStream).toByteArray();
+        try (FileOutputStream fileOutputStream = new FileOutputStream(filePath)) {
+            fileOutputStream.write(outputBytes);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
 }
