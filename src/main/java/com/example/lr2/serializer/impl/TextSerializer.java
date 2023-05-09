@@ -6,6 +6,7 @@ import com.example.lr2.serializer.Serializer;
 
 import java.io.*;
 import java.lang.reflect.Field;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -48,19 +49,8 @@ public class TextSerializer implements Serializer {
     @Override
     public ArrayList<Building> deserialize(String filePath) {
         ArrayList<Building> list = new ArrayList<>();
-        initBuildingClassesMap();
         try (BufferedReader br = new BufferedReader(new FileReader(filePath))){
-            while (br.ready()){
-                String className = br.readLine();
-                Building building = buildingClassesMap.get(className).create();
-                ArrayList<Field> fields = getAllFields(building.getClass());
-                for (Field field: fields){
-                    Field objField = getField(building.getClass(), br.readLine());
-                    objField.setAccessible(true);
-                    objField.set(building, getValueField(field, br.readLine()));
-                }
-                list.add(building);
-            }
+            this.setList(br, list);
         } catch (IOException | IllegalAccessException e) {
             throw new RuntimeException(e);
         }
@@ -69,15 +59,13 @@ public class TextSerializer implements Serializer {
 
     @Override
     public ArrayList<Building> deserialize(byte[] byteArray) {
-        File tempFile;
-        ArrayList<Building> list;
+        ArrayList<Building> list = new ArrayList<>();
+        ByteArrayInputStream inputStream = new ByteArrayInputStream(byteArray);
+        InputStreamReader inputStreamReader = new InputStreamReader(inputStream, StandardCharsets.UTF_8);
+        BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
         try {
-            tempFile = File.createTempFile("tempfile", ".txt");
-            Path tempFilePath = tempFile.toPath();
-            Files.write(tempFilePath, byteArray);
-            list = deserialize(tempFile.getPath());
-            Files.delete(tempFilePath);
-        } catch (IOException e) {
+            this.setList(bufferedReader, list);
+        } catch (IOException | IllegalAccessException e) {
             throw new RuntimeException(e);
         }
         return list;
@@ -96,6 +84,22 @@ public class TextSerializer implements Serializer {
         }
 
         return fields;
+    }
+
+    private void setList(BufferedReader br, ArrayList<Building> list) throws IOException, IllegalAccessException {
+        String line;
+        initBuildingClassesMap();
+        while ((line = br.readLine()) != null){
+            Building building = buildingClassesMap.get(line).create();
+            ArrayList<Field> fields = getAllFields(building.getClass());
+            for (Field field: fields){
+                Field objField = getField(building.getClass(), br.readLine());
+                objField.setAccessible(true);
+                objField.set(building, getValueField(field, br.readLine()));
+            }
+            list.add(building);
+        }
+
     }
 
     private Field getField(Class<?> clazz, String fieldName){

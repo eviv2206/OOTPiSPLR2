@@ -63,10 +63,9 @@ public class OpenFileController {
                 try {
                     byte[] fileBytes = Files.readAllBytes(Path.of(file.getPath()));
                     fileBytes = MainController.pluginMap.get(listExtensions.get(1)).decode(fileBytes);
-                    String filePath = file.getPath();
-                    int index = filePath.lastIndexOf(listExtensions.get(1)) - 1;
                     return FXCollections.observableArrayList(MainController.serializerMap.get(listExtensions.get(0)).deserialize(fileBytes));
                 } catch (IOException e) {
+
                     System.err.println(e.getMessage());
                 }
             } else {
